@@ -19,11 +19,17 @@ class Skill(models.Model):
     level = models.IntegerField(default=0)
     exp = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-    regular_activity = models.ForeignKey(RegularActivity, blank=True)
+    regular_activity = models.ForeignKey(RegularActivity, on_delete=models.PROTECT, blank=True, null=True, default=None, related_name='daily')
+    daily_activity = models.ForeignKey(DailyActivity, on_delete=models.PROTECT, blank=True, null=True, default=None, related_name='regular')
 
+    def __str__(self):
+        return self.name
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
-    level = models.IntegerField(default=0)
-    skills = models.ForeignKey(Skill, on_delete=models.PROTECT, related_name='skills')
+    level = models.IntegerField(default=1)
+    skills = models.ForeignKey(Skill, on_delete=models.PROTECT, blank=True, null=True, default=None, related_name='skills')
+
+    def __str__(self):
+        return self.name
